@@ -3,6 +3,8 @@ package com.bookstore.books.service;
 import com.bookstore.books.models.Books;
 import com.bookstore.books.repos.BookRepo;
 import com.bookstore.books.repos.CategoryRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ public class BookService {
     private BookRepo bookRepo;
     @Autowired
     private CategoryRepo categoryRepo;
+
+    private static final Logger log = LoggerFactory.getLogger(BookService.class);
 
 
     //Endpoint needed to get all the books in the book store via "/books"
@@ -39,11 +43,9 @@ public class BookService {
     }
 
     //Endpoint needed to update a book via "/books/{categoryId}/books"
-    public void updateBook(Books books, Long categoryID) {
-        categoryRepo.findById(categoryID).map(category ->{
-            books.setCategory(category);
-            return bookRepo.save(books);
-        });
+    public ResponseEntity<?> updateBook(Books books, Long categoryID) {
+        bookRepo.save(books);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //Endpoint needed to delete a book via "/books/id"
